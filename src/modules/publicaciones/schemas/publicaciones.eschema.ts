@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import{ Document, Types } from 'mongoose'
+import{ Document, Types} from 'mongoose';
+import mongoose from 'mongoose';
 
 
 export type PublicacionDocument= Publicacion & Document;
@@ -11,13 +12,14 @@ export type PublicacionDocument= Publicacion & Document;
 })
 export class Publicacion{
     @Prop({
-        requeried: true,
+        required: true,
     })
     contenido!: string;
 
     @Prop({
-        tipe: Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref:'User',
+        required:true,
     })
     user_id!: Types.ObjectId
     @Prop({

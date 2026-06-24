@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, Res } from '@nestjs/common';
 import { PublicacionDocument, Publicacion } from './schemas/publicaciones.eschema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CreatePublicacionesDto } from './dto/create-publicaciones.dto';
 import { ResponseHelper } from 'src/common/helpers/response.helper';
 import { UpdatePublicacionesDto } from './dto/update-publicaciones.dto';
@@ -20,7 +20,9 @@ export class PublicacionesService {
         dto:CreatePublicacionesDto,
     ){
         const publicacion=
-        await this.publicacionModel.create(dto);
+        await this.publicacionModel.create({...dto,
+            user_id: new Types.ObjectId(dto.user_id),}
+        );
 
         return ResponseHelper.success(
             publicacion,
@@ -28,12 +30,20 @@ export class PublicacionesService {
         );
     }
     // metodo para consultar publicaciones
-    async findALL(){
-        const publicaciones=
-        await this.publicacionModel.find({activo:true, });
+    async findAll() {
+    const publicaciones = await this.publicacionModel
+      .find({ activo: true })
+      .populate('user_id', 'password')
+      .sort({ createdAt: -1 })
+      .lean();
 
-        return ResponseHelper.success(publicaciones,);
-    }
+    const data = publicaciones.map((publicacion: any) => ({
+      ...publicacion,
+      user_id: publicacion.user_id,
+    }));
+
+    return ResponseHelper.success(data);
+  }
 
     // consultas de publicaciones eliminadas logicamente
 

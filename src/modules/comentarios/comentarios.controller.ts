@@ -1,27 +1,27 @@
 import { Body, Controller, Get, Param, Post, Put, Query, Delete, Patch } from '@nestjs/common';
-import { PublicacionesService } from './publicaciones.service';
-import { CreatePublicacionesDto } from './dto/create-publicaciones.dto';
+import { ComentariosService } from './comentarios.service';
+import { CreateComentariosDto } from './dto/create-comentarios.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { SearchPublicacionesDto } from './dto/search-publicaciones.dto';
-import { UpdatePublicacionesDto } from './dto/update-publicaciones.dto';
+import { SearchComentariosDto } from './dto/search-comentarios.dto';
+import { UpdateComentariosDto } from './dto/update-comentarios.dto';
 
-@ApiTags('Publicaciones')
-@Controller('Publicaciones')
-export class PublicacionesController {
+@ApiTags('Comentarios')
+@Controller('Comentarios')
+export class ComentariosController {
   constructor(
     private readonly Service: 
-    PublicacionesService,
+    ComentariosService,
   ) {}
 
   @Post()
-  create(@Body() dto: CreatePublicacionesDto) {
+  create(@Body() dto: CreateComentariosDto) {
     return this.Service.create(dto);
   }
 
   @Get()
   findAll(
     @Query()
-    Search: SearchPublicacionesDto
+    Search: SearchComentariosDto
   ) {
     return this.Service.findAll();
   }
@@ -42,7 +42,7 @@ export class PublicacionesController {
     @Param('id')
     id:string,
     @Body()
-    dto: UpdatePublicacionesDto
+    dto: UpdateComentariosDto
    ){
     return this.Service.update(id, dto)
    }
@@ -52,7 +52,7 @@ export class PublicacionesController {
         @Param('id')
            id: string,
            @Body()
-           dto:UpdatePublicacionesDto,
+           dto:UpdateComentariosDto,
        ){
            return this.Service.partialUpdate(id, dto);
        }

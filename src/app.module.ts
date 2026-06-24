@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { RolesModule } from './modules/roles/roles.module';
 import { UsuariosModule } from './modules/usuarios/usuarios.module'
 import { PublicacionesModule } from './modules/publicaciones/publicaciones.module';
+import { ComentariosModule } from './modules/comentarios/comentarios.module';
 
 
 
@@ -18,6 +19,7 @@ import { PublicacionesModule } from './modules/publicaciones/publicaciones.modul
     RolesModule,
     UsuariosModule,
     PublicacionesModule,
+    ComentariosModule,
     
   ],
   controllers: [AppController],
