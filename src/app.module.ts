@@ -7,6 +7,7 @@ import { RolesModule } from './modules/roles/roles.module';
 import { UsuariosModule } from './modules/usuarios/usuarios.module'
 import { PublicacionesModule } from './modules/publicaciones/publicaciones.module';
 import { ComentariosModule } from './modules/comentarios/comentarios.module';
+import { ReaccionesModule } from './modules/reacciones/reacciones.module';
 
 
 
@@ -20,6 +21,7 @@ import { ComentariosModule } from './modules/comentarios/comentarios.module';
     UsuariosModule,
     PublicacionesModule,
     ComentariosModule,
+    ReaccionesModule,
     
   ],
   controllers: [AppController],
