@@ -38,7 +38,7 @@ export class PublicacionesService {
 
     // Filtro por comentario
     if (search.contenido) {
-        filter.Comentarios = {
+        filter.contenido = {
             $regex: search.contenido,
             $options: 'i',
         };

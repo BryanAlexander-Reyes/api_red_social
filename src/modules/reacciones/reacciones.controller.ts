@@ -23,7 +23,7 @@ export class ReaccionesController {
     @Query()
     Search: SearchReaccionesDto
   ) {
-    return this.Service.findAll();
+    return this.Service.findAll(Search);
   }
   @Get('inactivos')
     findInactive(){
