@@ -30,6 +30,11 @@ export class UsuariosController{
         return this.service.findAll(Search);
     }
 
+    @Get('inactivos')
+    findInactive(){
+        return this.service.findInactive();
+    }
+
     @Get(':id')
     findOne(
          @Param('id')
@@ -48,6 +53,22 @@ export class UsuariosController{
         dto: UpdateUserDto
     ){
         return this.service.update(id, dto);
+    }
+    @Patch(':id')
+        partialUpdate(
+            @Param('id')
+            id: string,
+            @Body()
+            dto:UpdateUserDto,
+        ){
+            return this.service.partialUpdate(id, dto);
+        }
+    @Patch(':id/restaurar')
+    restore(
+        @Param('id')
+        id:string,
+    ){
+        return this.service.resotre(id);
     }
     @Delete(':id')
     remove(
