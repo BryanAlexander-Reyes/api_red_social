@@ -8,6 +8,9 @@ import { UsuariosModule } from './modules/usuarios/usuarios.module'
 import { PublicacionesModule } from './modules/publicaciones/publicaciones.module';
 import { ComentariosModule } from './modules/comentarios/comentarios.module';
 import { ReaccionesModule } from './modules/reacciones/reacciones.module';
+import { SeguidoresController } from './modules/seguidores/seguidores.controller';
+import { SeguidoresService } from './modules/seguidores/seguidores.service';
+import { SeguidoresModule } from './modules/seguidores/seguidores.module';
 
 
 
@@ -22,6 +25,7 @@ import { ReaccionesModule } from './modules/reacciones/reacciones.module';
     PublicacionesModule,
     ComentariosModule,
     ReaccionesModule,
+    SeguidoresModule,
     
   ],
   controllers: [AppController],
