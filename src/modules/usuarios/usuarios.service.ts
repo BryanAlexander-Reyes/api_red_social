@@ -64,6 +64,12 @@ export class UsuariosService{
         return ResponseHelper.success({total, page, limit, data});
     }
 
+    async findInactive(){
+        const users=
+        await this.userModel.find({ activo:false });
+        
+        return ResponseHelper.success(users);
+    }
 
     // consulta por id de usuario
     async findOne(id:string){
@@ -89,6 +95,15 @@ export class UsuariosService{
         return ResponseHelper.success(updateuser)
     }
 
+    async partialUpdate(id:string, dto:UpdateUserDto){
+            const user= await this.userModel.findById(id);
+    
+            if(!user){
+                throw new NotFoundException('Rol no encontrado')
+            }
+            const updateduser = await this.userModel.findByIdAndUpdate(id,{$set:dto,},{new:true})
+            return ResponseHelper.success(updateduser)
+        }
     // soft delete 
     async remove (id:string){
         const user = await this.userModel.findById(id)
@@ -98,5 +113,16 @@ export class UsuariosService{
         const deletedUser = await this.userModel.findByIdAndUpdate(id,{activo:false},{new:true});
 
         return ResponseHelper.success(deletedUser);
+    }
+
+    async resotre(id:string){
+        const user= await this.userModel.findById(id) 
+    
+    if (!user){
+        throw new NotFoundException('Rol no encontrado')
+    }
+
+    const restoreUser= await this.userModel.findByIdAndUpdate(id,{activo:true,},{new:true});
+    return ResponseHelper.success(restoreUser)
     }
 }
