@@ -23,7 +23,7 @@ export class PublicacionesController {
     @Query()
     Search: SearchPublicacionesDto
   ) {
-    return this.Service.findAll();
+    return this.Service.findAll(Search);
   }
   @Get('inactivos')
     findInactive(){
