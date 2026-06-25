@@ -5,6 +5,8 @@ import { Model, Types } from 'mongoose';
 import { CreateReaccionDto } from './dto/create-reacciones.dto';
 import { ResponseHelper } from 'src/common/helpers/response.helper';
 import { UpdateReaccionDto } from './dto/update-reacciones.dto';
+import { SearchReaccionesDto } from './dto/search-reacciones.dto';
+import { filter } from 'rxjs';
 
 
 @Injectable()
@@ -27,20 +29,30 @@ export class ReaccionesService {
   return ResponseHelper.success(Reaccion, 201);
 }
     // metodo para consultar publicaciones
-    async findAll() {
+    async findAll(search: SearchReaccionesDto) {
+        const filter: any= {activo:true,};
+        if (search.tipo_reaccion){
+            filter.tipo_reaccion={
+                $regex: search.tipo_reaccion,
+                $options: 'i',
+            };
+        }
+        // paginacion
+        const page =Number(search.page) ||1;
+        const limit = Number(search.limit) ||10;
+        // consulta
     const reacciones = await this.ReaccionesModel
-      .find({ activo: true })
+      .find(filter)
       .populate('user_id', '-password')
       .populate('publicacion_id','contenido')
       .sort({ createdAt: -1 })
+      .skip((page -1) * limit)
+      .limit(limit)
       .lean();
 
-    const data = reacciones.map((reaccion: any) => ({
-      ...reaccion,
-      user_id: reaccion.user_id,
-    }));
+        const total =await this.ReaccionesModel.countDocuments(filter);
 
-    return ResponseHelper.success(data);
+    return ResponseHelper.success({total, page, limit, data:reacciones});
   }
 
     // consultas de publicaciones eliminadas logicamente

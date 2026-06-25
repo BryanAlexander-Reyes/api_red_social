@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Query, Delete, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, Delete, Patch, Search } from '@nestjs/common';
 import { ComentariosService } from './comentarios.service';
 import { CreateComentariosDto } from './dto/create-comentarios.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -23,7 +23,7 @@ export class ComentariosController {
     @Query()
     Search: SearchComentariosDto
   ) {
-    return this.Service.findAll();
+    return this.Service.findAll(Search);
   }
   @Get('inactivos')
     findInactive(){

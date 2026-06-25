@@ -1,11 +1,11 @@
-import { Injectable, NotFoundException, Res } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { ComentariosDocument, Comentarios } from './schemas/comentarios.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { CreateComentariosDto } from './dto/create-comentarios.dto';
 import { ResponseHelper } from 'src/common/helpers/response.helper';
 import { UpdateComentariosDto } from './dto/update-comentarios.dto';
-
+import { SearchComentariosDto } from './dto/search-comentarios.dto';
 
 @Injectable()
 export class ComentariosService {
@@ -26,22 +26,40 @@ export class ComentariosService {
 
   return ResponseHelper.success(comentario, 201);
 }
-    // metodo para consultar publicaciones
-    async findAll() {
+    // metodo para consultar comentarios
+    async findAll(search: SearchComentariosDto) {
+    // Crear filtro
+    const filter: any = {
+        activo: true,
+    };
+
+    // Filtro por comentario
+    if (search.comentario) {
+        filter.Comentarios = {
+            $regex: search.comentario,
+            $options: 'i',
+        };
+    }
+
+    // Paginación
+    const page = Number(search.page) || 1;
+    const limit = Number(search.limit) || 10;
+
+    // Consulta
     const comentarios = await this.ComentariosModel
-      .find({ activo: true })
-      .populate('user_id', 'password')
-      .populate('publicacion_id','contenido')
-      .sort({ createdAt: -1 })
-      .lean();
+        .find(filter)
+        .populate('user_id', 'nombre correo')
+        .populate('publicacion_id', 'contenido')
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .lean();
 
-    const data = comentarios.map((comentarios: any) => ({
-      ...comentarios,
-      user_id: comentarios.user_id,
-    }));
+    // Total de documentos
+    const total = await this.ComentariosModel.countDocuments(filter);
 
-    return ResponseHelper.success(data);
-  }
+    return ResponseHelper.success({total,page,limit,data: comentarios,});
+}
 
     // consultas de publicaciones eliminadas logicamente
 

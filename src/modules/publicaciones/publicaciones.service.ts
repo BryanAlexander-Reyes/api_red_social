@@ -5,6 +5,7 @@ import { Model, Types } from 'mongoose';
 import { CreatePublicacionesDto } from './dto/create-publicaciones.dto';
 import { ResponseHelper } from 'src/common/helpers/response.helper';
 import { UpdatePublicacionesDto } from './dto/update-publicaciones.dto';
+import { SearchPublicacionesDto } from './dto/search-publicaciones.dto';
 
 
 @Injectable()
@@ -30,19 +31,31 @@ export class PublicacionesService {
         );
     }
     // metodo para consultar publicaciones
-    async findAll() {
+    async findAll(search:SearchPublicacionesDto) {
+        const filter: any = {
+        activo: true,
+    };
+
+    // Filtro por comentario
+    if (search.contenido) {
+        filter.contenido = {
+            $regex: search.contenido,
+            $options: 'i',
+        };
+    }
+    // Paginación
+    const page = Number(search.page) || 1;
+    const limit = Number(search.limit) || 10;
+
     const publicaciones = await this.publicacionModel
       .find({ activo: true })
       .populate('user_id', 'password')
       .sort({ createdAt: -1 })
       .lean();
 
-    const data = publicaciones.map((publicacion: any) => ({
-      ...publicacion,
-      user_id: publicacion.user_id,
-    }));
+    const total = await this.publicacionModel.countDocuments(filter);
 
-    return ResponseHelper.success(data);
+    return ResponseHelper.success({total,page,limit,data:publicaciones});
   }
 
     // consultas de publicaciones eliminadas logicamente
